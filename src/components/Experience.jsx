@@ -279,7 +279,7 @@ const Experience = () => {
                 {selectedId && (
                     <motion.div
                         layoutId={selectedId}
-                        className='fixed inset-0 bg-white  p-10 overflow-auto rounded-lg shadow-lg flex flex-col m-24 justify-center'
+                        className='fixed inset-0 bg-white  p-10 overflow-auto rounded-lg shadow-lg flex flex-col xl:m-24 lg:m-24 m-2 justify-center'
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
