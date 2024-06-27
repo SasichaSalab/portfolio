@@ -37,6 +37,9 @@ const getItemsPerPage = () => {
     return 8; // Medium screens
   } else if (window.innerWidth >= 392) {
     return 4; // Medium screens
+  }
+  else if (window.innerWidth >= 350) {
+    return 2; // Medium screens
   } else {
     return 1; // Small screens
   }
