@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { AppBar, Toolbar, Typography, Drawer, IconButton, List, ListItem, ListItemText } from '@mui/material';
+import { AppBar, Toolbar, Typography, Dialog, IconButton, List, ListItem, ListItemText } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { motion, useTransform, useScroll } from 'framer-motion';
 
-const Navbar = ({ heroRef, aboutMeRef, skillsRef, experienceRef, contactRef }) => {
+const Navbar = ({ heroRef, aboutMeRef, skillsRef, experienceRef }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const { scrollY } = useScroll();
     const underlineWidth = useTransform(scrollY, [0, 200], ['0%', '100%']); // Adjust 200 based on your scroll range
@@ -22,11 +22,8 @@ const Navbar = ({ heroRef, aboutMeRef, skillsRef, experienceRef, contactRef }) =
             const aboutMeOffsetTop = aboutMeRef.current?.offsetTop || 0;
             const skillsOffsetTop = skillsRef.current?.offsetTop || 0;
             const experienceOffsetTop = experienceRef.current?.offsetTop || 0;
-            const contactOffsetTop = contactRef.current?.offsetTop || 0;
 
-            if (scrollTop >= contactOffsetTop - 50) {
-                setActiveSection('contact');
-            } else if (scrollTop >= experienceOffsetTop - 50) {
+            if (scrollTop >= experienceOffsetTop - 50) {
                 setActiveSection('experience');
             } else if (scrollTop >= skillsOffsetTop - 50) {
                 setActiveSection('skills');
@@ -44,21 +41,21 @@ const Navbar = ({ heroRef, aboutMeRef, skillsRef, experienceRef, contactRef }) =
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
-    }, [heroRef, aboutMeRef, skillsRef, experienceRef, contactRef]);
+    }, [heroRef, aboutMeRef, skillsRef, experienceRef]);
 
-    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
-    const handleDrawerOpen = () => {
-        setDrawerOpen(true);
+    const handleDialogOpen = () => {
+        setDialogOpen(true);
     };
 
-    const handleDrawerClose = () => {
-        setDrawerOpen(false);
+    const handleDialogClose = () => {
+        setDialogOpen(false);
     };
 
     const scrollToSection = (ref) => {
         ref.current.scrollIntoView({ behavior: 'smooth' });
-        setDrawerOpen(false);
+        setDialogOpen(false);
     };
 
     return (
@@ -76,7 +73,13 @@ const Navbar = ({ heroRef, aboutMeRef, skillsRef, experienceRef, contactRef }) =
                         style={{ width: underlineWidth }}
                     ></motion.div>
                     <div className='flex md:hidden'>
-                        <IconButton color="inherit" aria-label="open drawer" edge="start" onClick={handleDrawerOpen}>
+                        <IconButton
+                            color="inherit"
+                            aria-label="open dialog"
+                            edge="start"
+                            onClick={handleDialogOpen}
+                            sx={{ zIndex: 1300 }} // Ensure the button is on top of other elements
+                        >
                             <MenuIcon />
                         </IconButton>
                     </div>
@@ -92,9 +95,8 @@ const Navbar = ({ heroRef, aboutMeRef, skillsRef, experienceRef, contactRef }) =
                                     else if (text === 'about me') scrollToSection(aboutMeRef);
                                     else if (text === 'skills') scrollToSection(skillsRef);
                                     else if (text === 'experience') scrollToSection(experienceRef);
-                                    else if (text === 'contact') scrollToSection(contactRef);
                                 }}
-                                style={{ cursor: 'pointer' }}
+                                style={{ cursor: 'pointer', padding: '0 8px' }} // Add padding to ensure visibility
                             >
                                 {text}
                             </Typography>
@@ -102,7 +104,19 @@ const Navbar = ({ heroRef, aboutMeRef, skillsRef, experienceRef, contactRef }) =
                     </div>
                 </Toolbar>
             </AppBar>
-            <Drawer anchor='left' open={drawerOpen} onClose={handleDrawerClose}>
+            <Dialog
+                open={dialogOpen}
+                onClose={handleDialogClose}
+                aria-labelledby="responsive-dialog-title"
+                PaperProps={{
+                    sx: {
+                        width:'100%',
+                        minWidth: '180px', // Minimum width for the dialog
+                        padding: '20px', // Padding around the content
+                    }
+                }}
+            >
+                <Typography variant='h5'>Menu</Typography>
                 <List>
                     {['home', 'about me', 'skills', 'experience'].map((text) => (
                         <ListItem
@@ -113,7 +127,6 @@ const Navbar = ({ heroRef, aboutMeRef, skillsRef, experienceRef, contactRef }) =
                                 else if (text === 'about me') scrollToSection(aboutMeRef);
                                 else if (text === 'skills') scrollToSection(skillsRef);
                                 else if (text === 'experience') scrollToSection(experienceRef);
-                                else if (text === 'contact') scrollToSection(contactRef);
                             }}
                         >
                             <ListItemText
@@ -121,14 +134,15 @@ const Navbar = ({ heroRef, aboutMeRef, skillsRef, experienceRef, contactRef }) =
                                 primaryTypographyProps={{
                                     style: {
                                         fontWeight: activeSection === text ? 'bold' : 'normal',
-                                        color: activeSection === text ? '#BA67D7' : 'inherit'
+                                        color: activeSection === text ? '#BA67D7' : 'inherit',
+                                        padding: '0 8px' // Add padding to ensure visibility
                                     }
                                 }}
                             />
                         </ListItem>
                     ))}
                 </List>
-            </Drawer>
+            </Dialog>
         </motion.div>
     );
 };
