@@ -169,6 +169,7 @@ const items = [
 
 const Experience = () => {
     const [selectedId, setSelectedId] = useState(null);
+
     const getItemsPerPage = () => {
         if (window.innerWidth >= 1300) {
             return 8; // Large screens
@@ -180,6 +181,7 @@ const Experience = () => {
             return 1; // Small screens
         }
     };
+
     const settings = {
         dots: true,
         infinite: true,
@@ -189,6 +191,7 @@ const Experience = () => {
         prevArrow: <PrevArrow />,
         nextArrow: <NextArrow />,
     };
+
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage());
 
@@ -206,7 +209,6 @@ const Experience = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const currentItems = items.slice(startIndex, startIndex + itemsPerPage);
 
-    // useInView hook to track visibility of skills grid
     const { ref, inView } = useInView({
         triggerOnce: true, // Trigger animation only once
         threshold: 0.2, // Trigger animation when 20% of element is in view
@@ -222,25 +224,27 @@ const Experience = () => {
                 backgroundRepeat: 'no-repeat',
                 width: '100%'
             }}
-        ><motion.div className='w-full flex flex-row items-center justify-center'
-            ref={ref} // Attach ref to element you want to track
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
-            transition={{ duration: 2 }}
         >
-                <Typography variant='h4' className='uppercase text-black'>Experience</Typography></motion.div>
+            <motion.div className='w-full flex flex-row items-center justify-center'
+                ref={ref} // Attach ref to element you want to track
+                initial={{ opacity: 0, y: 100 }}
+                animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : 20 }}
+                transition={{ duration: 2 }}
+            >
+                <Typography variant='h4' className='uppercase text-black'>Experience</Typography>
+            </motion.div>
             <motion.div className='w-full flex flex-wrap items-start justify-center h-full'>
                 <AnimatePresence>
-                    {currentItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((item, index) => (
+                    {currentItems.map((item, index) => (
                         <motion.div
-                            key={item.id}
+                            key={index}
                             layoutId={item.id}
                             onClick={() => setSelectedId(item.id)}
                             initial={{ opacity: 0 }}
                             exit={{ opacity: 0 }}
                             animate={{ opacity: inView ? 1 : 0, scale: inView ? 1 : 0.5 }}
                             transition={{ duration: 0.5, delay: index * 0.2 }} // Adjust delay timing as needed
-                            className='cursor-pointer m-1 bg-white bg-opacity-65 shadow-lg rounded-3xl h-80 flex flex-col justify-between'
+                            className='cursor-pointer m-1 bg-white bg-opacity-65 shadow-lg rounded-3xl xl:h-80 lg:h-80 md:h-80 h-auto flex flex-col justify-between'
                         >
                             <img src={item.image} alt={item.title} className='w-full h-1/2 object-cover rounded-tl-3xl rounded-tr-3xl p-5' />
                             <div className='bg-white p-2 rounded-bl-3xl rounded-br-3xl max-w-96 h-1/2'>
@@ -279,7 +283,7 @@ const Experience = () => {
                 {selectedId && (
                     <motion.div
                         layoutId={selectedId}
-                        className='fixed inset-0 bg-white  p-10 overflow-auto rounded-lg shadow-lg flex flex-col xl:m-24 lg:m-24 m-2 justify-center'
+                        className='fixed inset-0 bg-white  p-10 overflow-auto rounded-lg shadow-lg flex flex-col xl:m-24 lg:m-24 m-2 justify-center mt-5'
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -290,7 +294,7 @@ const Experience = () => {
                         >
                             <Close />
                         </motion.button>
-                        {items.map(item => item.id === selectedId && (
+                        {items.filter(item => item.id === selectedId).map(item => (
                             <div key={item.id} className='flex flex-col md:flex-col xl:flex-row lg:flex-row gap-5 justify-center items-center xl:mt-0 lg:mt-0 mt-96'>
                                 <Slider {...settings} className=' md:w-1/2 w-full h-full flex flex-row justify-center items-center'>
                                     {(item.video ? [item.video] : []).concat(item.imageList).map((media, index) => (
