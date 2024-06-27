@@ -1,0 +1,57 @@
+
+.cloudy-circle {
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle at center, #FCDAF0, #F18181, #BA67D7);
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.cloudy-circle::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: inherit;
+  border-radius: 50%;
+  filter: blur(15px);
+  z-index: -1;
+}
+.text-responsive {
+  font-size: 1.5rem; /* Default size for small screens */
+}
+
+@media (min-width: 393px) {
+  .text-responsive {
+      font-size: 2rem; /* Small screens */
+  }
+}
+
+@media (min-width: 500px) {
+  .text-responsive {
+      font-size: 2.5rem; /* Medium screens */
+  }
+}
+
+@media (min-width: 700px) {
+  .text-responsive {
+      font-size: 3rem; /* Large screens */
+  }
+}
+
+@media (min-width: 1280px) {
+  .text-responsive {
+      font-size: 3.5rem; /* Extra-large screens */
+  }
+}
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px; /* Adjust height as needed */
+  background-color: #BA67D7; /* Use your primary color */
+  transform-origin: left;
+}
